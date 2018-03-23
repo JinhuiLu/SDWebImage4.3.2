@@ -331,7 +331,8 @@ typedef NSMutableDictionary<NSString *, id> SDCallbacksDictionary;
 }
 
 #pragma mark NSURLSessionDataDelegate
-//收到服务端响应，在一次请求中只会执行一次
+
+//收到服务端响应，收到了响应头,在一次请求中只会执行一次
 - (void)URLSession:(NSURLSession *)session
           dataTask:(NSURLSessionDataTask *)dataTask
 didReceiveResponse:(NSURLResponse *)response
@@ -374,6 +375,7 @@ didReceiveResponse:(NSURLResponse *)response
     }
 }
 
+//接收到了数据
 - (void)URLSession:(NSURLSession *)session dataTask:(NSURLSessionDataTask *)dataTask didReceiveData:(NSData *)data {
     if (!self.imageData) {
         //根据response返回的文件大小创建可变data
@@ -419,7 +421,7 @@ didReceiveResponse:(NSURLResponse *)response
                 }
                 
                 // We do not keep the progressive decoding image even when `finished`=YES. Because they are for view rendering but not take full function from downloader options. And some coders implementation may not keep consistent between progressive decoding and normal decoding.
-                //进行失败回调
+                //进行回调
                 [self callCompletionBlocksWithImage:image imageData:nil error:nil finished:NO];
             }
         });
@@ -431,7 +433,7 @@ didReceiveResponse:(NSURLResponse *)response
     }
 }
 
-//如果需要缓存response则做一些处理
+//缓存数据,这里可以使用系统默认的就行，这个是要将response缓存起来
 - (void)URLSession:(NSURLSession *)session
           dataTask:(NSURLSessionDataTask *)dataTask
  willCacheResponse:(NSCachedURLResponse *)proposedResponse
